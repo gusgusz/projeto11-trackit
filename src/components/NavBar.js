@@ -9,7 +9,7 @@ export default function NavBar(){
     return(
         <Nav>
             <h1>TrackIt</h1>
-            <img src={user.image}></img>
+            <img alt="profile" src={user.image}></img>
         </Nav>
     )
 }
