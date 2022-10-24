@@ -9,43 +9,81 @@ import NavBar from "./NavBar";
 
 
 export default function Today(){
-    const date = new Date
+    const date = new Date()
     const {user} = useContext(UserContext)
     const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today"
+    const dayName = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
     const config = {
         headers: {
             "Authorization": `Bearer ${user.token}`
         }
     }
     const [habits,setHabits] = useState([])
+    const [control, setControl] = useState(true)
+    const [count, setCount] = useState(0)
     
     useEffect(() => {
             
     
         const promise = axios.get(URL, config)
-    
         promise.then(response => {
             setHabits(response.data)
-            console.log(response.data)
+            Count(response.data)
+           
+            
         })
     
         promise.catch(err => err.response)
-    },[])
+    },[control])
+    
+    function Count(arr){
+        const done = arr.filter((o) => o.done === true)
+        let i = ((done.length)/(arr.length)*100)
+        setCount(i)
+        
+        
+    }
 
+     function CheckIt(c){
+        const URLU =`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${c.id}/uncheck`
+        const URLM = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${c.id}/check`
+        if(!(c.done)){
+            const promise = axios.post(URLM,c.id, config)
+            console.log(URLM)
+            promise.then(() => {
+                
+                setControl(!control)
+                console.log("tentei marcar")
+            })
+            promise.catch(err => {console.log("marquei", err.response.data)})
+        }
+        else{
+            const promise = axios.post(URLU,c.id, config)
 
+            promise.then(() => {
+                
+                setControl(!control)
+        
+            })
+            promise.catch(err => {console.log(err.response.data)})
+        }
+     }
+    
     return(
         <>
         <NavBar/>
         <Content>
-            <h1>Segunda, {date.getDate()}</h1>
-            <h2>67% dos hábitos concluídos</h2>
-          { habits.map((obj) => <Box>
+            <h1>{dayName[date.getDay()]}, {date.getDate()}/{date.getMonth() + 1}</h1>
+            <h2>{count}% dos hábitos concluídos</h2>
+          { habits.map((obj,i) =>
+           <Box done={obj.done} key={i}> 
+          
                 <div>
                 <span>{obj.name}</span>
                 <h4>Sequência atual: {obj.currentSequence} dias</h4>
                 <h4>Seu recorde: {obj.highestSequence} dias</h4>
                 </div>
-                <ion-icon name="checkmark-outline"></ion-icon>
+                <ion-icon onClick={() => CheckIt(obj)} name="checkbox"></ion-icon>
             </Box>)}
         </Content>
         <Footer/>
@@ -56,7 +94,8 @@ export default function Today(){
 const Content = styled.div`
 position: absolute;
 top: 70px;
-margin-bottom: 150px;
+margin-bottom: 100px;
+padding-bottom: 100px;
 background-color: #e5e5e5;
 height: 100%;
     width: 100%;
@@ -122,13 +161,16 @@ div{
 
     }
 }
+
+
 ion-icon{
-        background-color: #8FC549;
-        color: #ffffff;
+        background-color: white;
+        color: ${props => props.done ? "#8FC549" : "#E7E7E7" };
         height: 69px;
         width: 69px;
         border-radius: 5px;
         margin-right: 8px;
+        cursor: pointer;
 
     }
 `

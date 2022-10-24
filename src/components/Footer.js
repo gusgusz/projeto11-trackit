@@ -12,9 +12,11 @@ export default function Footer(){
             <h1>Hábitos</h1>
             </Link>
             <Link to="/today">
-            <img  src={Hoje}></img>
+            <img  alt="today"  src={Hoje}></img>
             </Link>
+            <Link to="/history">
             <h1>Histórico</h1>
+            </Link>
         </Buttons>
     )
 }
@@ -31,6 +33,7 @@ align-items: center;
 padding: 0 20px;
 
 
+
     h1{
         font-family: Lexend Deca;
         font-size: 18px;
@@ -39,6 +42,7 @@ padding: 0 20px;
         color: #52B6FF;
         cursor: pointer;
         text-decoration: none;
+        cursor: pointer;
 
 
     }
@@ -47,7 +51,8 @@ padding: 0 20px;
     img{
         border-radius: 50px;
         align-self: center;
-        margin-bottom: 40px;
+        padding-bottom: 40px;
+        cursor: pointer;
         cursor: pointer;
     }
 

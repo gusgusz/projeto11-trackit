@@ -46,7 +46,7 @@ export default function Beggin(){
             
           })
     
-          promise.catch(err => console.log(err.response))
+          promise.catch(err => alert(err.response.data.message))
         
         
       }
@@ -64,11 +64,11 @@ export default function Beggin(){
     
             setUser(response.data)
             
-            console.log(response.data)
+           
             navigate("/habits");
           });
           
-          promise.catch(err => console.log(err.response));
+          promise.catch(err => alert(err.response.data.message));
         
       }
    

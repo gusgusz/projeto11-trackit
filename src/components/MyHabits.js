@@ -33,7 +33,7 @@ const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`;
 
         promise.then(response => {
             setHabits(response.data)
-            console.log(response.data)
+           
         })
 
         promise.catch(err => err.response)
@@ -47,14 +47,19 @@ const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`;
    
 
     function HabitRegister() {
-
+       
         
+if(newHabit !== ""&& clicked.length !== 0){
 
-        const r =  {
-            name: `${newHabit}` ,
-            days: clicked ,
-        }
-    console.log("novo habito", r)
+    const r =  {
+        name: `${newHabit}` ,
+        days: clicked ,
+    }
+
+
+    
+
+     
    
        
          
@@ -62,8 +67,7 @@ const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`;
     
           promise.then(response => {
     
-            console.log("cadastrado", response.data)
-            setHabits([...habits,response.data])
+            setControl(!control)
             setClicked([])
             setNewHabit("")
             setOpen(false)
@@ -72,7 +76,11 @@ const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`;
             
           })
     
-          promise.catch(err => console.log(err.data.response))
+          promise.catch(err => {alert(err.response.data.details)
+            setControl(!control)
+        })
+    }
+    else(alert("Você precisar nomear um habito e escolher pelo menos um dia na semana"))
   
         
       }
@@ -100,13 +108,15 @@ const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`;
         </AddHabits>
         <HabitsContent>  
         {open ?    
-            <NewHabit>
+            <NewHabit newHabit={newHabit}>
             <label htmlFor="newHabit"></label>
                 <input
                 id="newHabit"
                 placeholder="nome do hábito"
+                required
                 onChange={e => setNewHabit(e.target.value )}
                 value={newHabit}
+                
                 />
                 <Days>
                     {days.map((d,index) => clicked.includes(index) ?
@@ -120,7 +130,7 @@ const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`;
                 </div>
             </NewHabit>
  : ""}
-            {habits.length ==  0 ? 
+            {habits.length ===  0 ? 
              <span> Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</span>
             :
             habits.map((obj, i) => 
@@ -146,15 +156,15 @@ const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`;
     function Click(i){
         
         if(clicked.includes(i)){
-            const newC = clicked.filter(le => le != i)
+            const newC = clicked.filter(le => le !== i)
             setClicked(newC)
-            console.log(clicked)
+           
         }
         else{
            
             
             setClicked([...clicked,i])
-            console.log(clicked)
+         
         }
     }
 
@@ -201,6 +211,7 @@ function CancelNewHabit(){
     font-weight: 400;
     line-height: 34px;
     align-self: center;
+    cursor: pointer;
 
     }
  `
@@ -249,6 +260,7 @@ flex-direction: column;
         width: 90%;
         display: flex;
         justify-content: end;
+        cursor: pointer;
     }
 
     input{
@@ -262,7 +274,7 @@ flex-direction: column;
         font-weight: 400;
         line-height: 25px;
         text-align: left;
-        color: #DBDBDB;
+        color: ${props => props.newHabit === "" ? "#DBDBDB" : "#666666"};
         background-color: #ffffff;
         border: 1px solid #DBDBDB;
 
@@ -281,6 +293,7 @@ flex-direction: column;
         line-height: 20px;
         margin: 0 5px;
         border: 1px solid #52B6FF;
+        cursor: pointer;
 
     }
 
@@ -296,6 +309,7 @@ flex-direction: column;
         font-size: 15px;
         font-weight: 400;
         line-height: 20px;
+        cursor: pointer;
         
        
 
@@ -323,6 +337,7 @@ margin-top: 6px;
    background-color: #CFCFCF;
    color: #ffffff;
    border: 1px solid #DBDBDB;
+   cursor: pointer;
    
 
 
@@ -340,7 +355,7 @@ button{
    background-color: #ffffff;
    color: #CFCFCF;
    border: 1px solid #DBDBDB;
-   
+   cursor: pointer;
 
 
 }
@@ -376,5 +391,6 @@ const Habit = styled.div`
         position: absolute;
         right: 10%;
         margin-top: 8px;
+        cursor: pointer;
     }
 `
